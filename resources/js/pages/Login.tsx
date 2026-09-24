@@ -23,7 +23,7 @@ export default function Login({ status, error }: Props) {
 
     return (
         <div className="flex min-h-screen flex-col justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
-            <Head title="Login | School E-Voting System" />
+            <Head title="Login | E-Voting System" />
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 {/* Logo & Header */}
@@ -35,8 +35,8 @@ export default function Login({ status, error }: Props) {
                 <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-white sm:text-3xl">
                     EVotingSystem
                 </h2>
-                <p className="mt-1 text-center text-sm text-slate-400">
-                    Official School Electronic Voting Platform
+                <p className="mt-1 text-center text-sm font-medium text-slate-400">
+                    CPSU – Moises Padilla • E-Voting System
                 </p>
             </div>
 
@@ -135,7 +135,7 @@ export default function Login({ status, error }: Props) {
                 </div>
 
                 <p className="mt-6 text-center text-xs text-slate-500">
-                    Protected by encrypted voting verification • AY 2026–2027
+                    Protected by encrypted voting verification
                 </p>
             </div>
         </div>
