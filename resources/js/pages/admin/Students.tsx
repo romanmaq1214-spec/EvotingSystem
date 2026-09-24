@@ -11,6 +11,8 @@ import {
     XCircle,
     X,
     UserCheck,
+    Eye,
+    EyeOff,
 } from 'lucide-react';
 
 interface Student {
@@ -43,6 +45,7 @@ export default function Students({ students, filters }: Props) {
     const [statusFilter, setStatusFilter] = useState(filters.status || '');
     const [modalOpen, setModalOpen] = useState(false);
     const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+    const [showModalPassword, setShowModalPassword] = useState(false);
 
     const { data, setData, post, put, processing, reset, errors } = useForm({
         student_id: '',
@@ -340,14 +343,24 @@ export default function Students({ students, filters }: Props) {
                                     <label className="font-semibold text-slate-700">
                                         Password {editingStudent ? '(Leave blank to keep)' : '*'}
                                     </label>
-                                    <input
-                                        type="password"
-                                        required={!editingStudent}
-                                        placeholder="Set account password"
-                                        value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
-                                        className="mt-1 w-full rounded-xl border border-slate-200 p-2.5"
-                                    />
+                                    <div className="relative mt-1">
+                                        <input
+                                            type={showModalPassword ? 'text' : 'password'}
+                                            required={!editingStudent}
+                                            placeholder="Set account password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            className="w-full rounded-xl border border-slate-200 p-2.5 pr-10"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowModalPassword(!showModalPassword)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                                            title={showModalPassword ? 'Hide password' : 'Show password'}
+                                        >
+                                            {showModalPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div className="rounded-xl bg-indigo-50/70 p-2.5 text-[11px] text-indigo-700 border border-indigo-100">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import { Vote, Lock, User, Eye, EyeOff, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Vote, Lock, User, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface Props {
     status?: string;
@@ -19,22 +19,6 @@ export default function Login({ status, error }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/login');
-    };
-
-    const fillDemoAdmin = () => {
-        setData({
-            login: 'admin@evotingsystem.test',
-            password: 'password',
-            remember: true,
-        });
-    };
-
-    const fillDemoStudent = () => {
-        setData({
-            login: '2026-0001',
-            password: 'password',
-            remember: true,
-        });
     };
 
     return (
@@ -148,31 +132,6 @@ export default function Login({ status, error }: Props) {
                             {processing ? 'Authenticating...' : 'Sign In to Vote'}
                         </button>
                     </form>
-
-                    {/* Quick Demo Credentials */}
-                    <div className="mt-6 border-t border-slate-700/60 pt-5">
-                        <p className="text-center text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                            Quick Demo Sign In
-                        </p>
-                        <div className="mt-3 grid grid-cols-2 gap-2">
-                            <button
-                                type="button"
-                                onClick={fillDemoAdmin}
-                                className="flex items-center justify-center space-x-1.5 rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-indigo-500 hover:bg-slate-800 hover:text-white"
-                            >
-                                <ShieldCheck className="h-3.5 w-3.5 text-indigo-400" />
-                                <span>Admin Demo</span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={fillDemoStudent}
-                                className="flex items-center justify-center space-x-1.5 rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-blue-500 hover:bg-slate-800 hover:text-white"
-                            >
-                                <Vote className="h-3.5 w-3.5 text-blue-400" />
-                                <span>Student Demo</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <p className="mt-6 text-center text-xs text-slate-500">

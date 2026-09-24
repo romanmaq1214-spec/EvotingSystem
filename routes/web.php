@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CandidateController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ElectionController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\AuthController;
@@ -30,6 +31,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Admin Routes (Protected by auth & admin middleware)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Admin Profile & Credentials Management
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Student Management
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
