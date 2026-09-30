@@ -23,7 +23,7 @@ export default function Login({ status, error }: Props) {
 
     return (
         <div className="flex min-h-screen flex-col justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
-            <Head title="Login | E-Voting System" />
+            <Head title="Login | School E-Voting System" />
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 {/* Logo & Header */}
@@ -36,7 +36,7 @@ export default function Login({ status, error }: Props) {
                     EVotingSystem
                 </h2>
                 <p className="mt-1 text-center text-sm font-medium text-slate-400">
-                    CPSU – Moises Padilla • E-Voting System
+                    CPSU – Moises Padilla • School E-Voting System
                 </p>
             </div>
 
