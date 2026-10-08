@@ -27,11 +27,12 @@ class DashboardController extends Controller
 
         $electionStats = null;
         if ($currentElection) {
+            $activeStudentsCount = Student::where('status', 'active')->count();
             $uniqueVotersCount = Vote::where('election_id', $currentElection->id)
+                ->whereHas('student', fn ($query) => $query->where('status', 'active'))
                 ->distinct('voter_id')
                 ->count('voter_id');
 
-            $activeStudentsCount = Student::where('status', 'active')->count();
             $participationRate = $activeStudentsCount > 0
                 ? round(($uniqueVotersCount / $activeStudentsCount) * 100, 1)
                 : 0;
@@ -47,6 +48,8 @@ class DashboardController extends Controller
                 'total_candidates' => $currentElection->candidates()->count(),
                 'votes_cast' => $currentElection->votes()->count(),
                 'unique_voters' => $uniqueVotersCount,
+                'eligible_students' => $activeStudentsCount,
+                'not_voted_students' => max($activeStudentsCount - $uniqueVotersCount, 0),
                 'participation_rate' => $participationRate,
             ];
         }
@@ -81,4 +84,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

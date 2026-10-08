@@ -23,14 +23,16 @@ export default function Login({ status, error }: Props) {
 
     return (
         <div className="flex min-h-screen flex-col justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
-            <Head title="Login | School E-Voting System" />
+            <Head title="EVotingSystem" />
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 {/* Logo & Header */}
                 <div className="flex justify-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-xl shadow-indigo-500/30 ring-4 ring-indigo-500/20">
-                        <Vote className="h-8 w-8" />
-                    </div>
+                    <img
+                        src="/logo.png"
+                        alt="EVotingSystem CPSU Logo"
+                        className="h-24 w-24 object-contain drop-shadow-xl"
+                    />
                 </div>
                 <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-white sm:text-3xl">
                     EVotingSystem

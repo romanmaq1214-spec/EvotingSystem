@@ -34,6 +34,8 @@ interface Props {
         total_candidates: number;
         votes_cast: number;
         unique_voters: number;
+        eligible_students: number;
+        not_voted_students: number;
         participation_rate: number;
     } | null;
     recent_activity: Array<{
@@ -148,7 +150,7 @@ export default function Dashboard({ stats, current_election, recent_activity }: 
                                         <span className="font-bold text-indigo-600">
                                             {current_election.participation_rate}%
                                             <span className="text-xs font-normal text-slate-500">
-                                                {' '}({current_election.unique_voters} / {stats.total_students} students)
+                                                {' '}({current_election.unique_voters} / {current_election.eligible_students} students)
                                             </span>
                                         </span>
                                     </div>
@@ -157,6 +159,14 @@ export default function Dashboard({ stats, current_election, recent_activity }: 
                                             className="h-full rounded-full bg-indigo-600 transition-all duration-500"
                                             style={{ width: `${Math.min(current_election.participation_rate, 100)}%` }}
                                         />
+                                    </div>
+                                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                                        <span className="font-medium text-emerald-700">
+                                            {current_election.unique_voters} / {current_election.eligible_students} students voted
+                                        </span>
+                                        <span className="font-medium text-slate-500">
+                                            {current_election.not_voted_students} {current_election.not_voted_students === 1 ? 'student has' : 'students have'} not voted yet
+                                        </span>
                                     </div>
                                 </div>
 
@@ -308,4 +318,3 @@ export default function Dashboard({ stats, current_election, recent_activity }: 
         </AdminLayout>
     );
 }
-

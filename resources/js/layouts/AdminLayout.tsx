@@ -85,7 +85,7 @@ export default function AdminLayout({ title, children }: Props) {
 
     return (
         <div className="flex min-h-screen bg-slate-50 font-sans text-slate-800">
-            <Head title={`${title} | Admin EVotingSystem`} />
+            <Head title="EVotingSystem" />
 
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
@@ -104,9 +104,11 @@ export default function AdminLayout({ title, children }: Props) {
                 {/* Brand / Logo */}
                 <div className="flex h-16 items-center justify-between border-b border-slate-800 px-6">
                     <Link href="/admin/dashboard" className="flex items-center space-x-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white shadow-md">
-                            <Vote className="h-5 w-5" />
-                        </div>
+                        <img
+                            src="/logo.png"
+                            alt="EVotingSystem Logo"
+                            className="h-9 w-9 object-contain"
+                        />
                         <div>
                             <span className="font-bold tracking-tight text-white">EVotingSystem</span>
                             <span className="block text-[10px] uppercase tracking-wider text-indigo-400">Admin Portal</span>

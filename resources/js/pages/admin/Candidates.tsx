@@ -147,17 +147,16 @@ export default function Candidates({
                     </button>
                 </div>
 
-                {/* Candidate Cards Grid */}
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {/* Candidates shown as a simple list with horizontal dividers. */}
+                <div className="divide-y divide-slate-200 border-y border-slate-200 bg-white">
                     {candidates.data.map((candidate) => (
                         <div
                             key={candidate.id}
-                            className="flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
+                            className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between"
                         >
-                            <div className="p-6">
-                                <div className="flex items-start space-x-4">
-                                    {/* Photo or Initials Avatar */}
-                                    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-indigo-50 font-bold text-indigo-600 ring-2 ring-indigo-500/20 overflow-hidden">
+                            <div className="flex min-w-0 flex-1 items-center gap-4">
+                                {/* Photo or Initials Avatar */}
+                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 font-bold text-indigo-600 ring-1 ring-indigo-500/20">
                                         {candidate.photo ? (
                                             <img
                                                 src={candidate.photo}
@@ -169,45 +168,36 @@ export default function Candidates({
                                                 {candidate.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
                                             </span>
                                         )}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="truncate font-bold text-slate-900">{candidate.name}</h3>
-                                        <div className="text-xs font-semibold text-indigo-600">
-                                            {candidate.party}
-                                        </div>
-                                        <div className="mt-1 inline-flex items-center space-x-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
-                                            <Award className="h-3 w-3" />
-                                            <span>{candidate.position?.name}</span>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                {candidate.platform && (
-                                    <div className="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-600 line-clamp-3 italic">
-                                        "{candidate.platform}"
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="truncate font-bold text-slate-900">{candidate.name}</h3>
+                                    <div className="text-xs font-semibold text-indigo-600">{candidate.party}</div>
+                                    <div className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700">
+                                        <Award className="h-3 w-3" />
+                                        <span>{candidate.position?.name}</span>
                                     </div>
-                                )}
-
-                                <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                                    <span>Status: <strong className={candidate.status === 'active' ? 'text-emerald-600' : 'text-slate-400'}>{candidate.status}</strong></span>
-                                    <span>Votes: <strong className="text-indigo-600">{candidate.votes_count}</strong></span>
                                 </div>
                             </div>
 
-                            {/* Card Footer Actions */}
-                            <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-6 py-3">
-                                <span className="text-[10px] text-slate-400">{candidate.election?.title}</span>
-                                <div className="flex items-center space-x-1">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500 sm:justify-end">
+                                <span>Status: <strong className={candidate.status === 'active' ? 'text-emerald-600' : 'text-slate-400'}>{candidate.status}</strong></span>
+                                <span>Votes: <strong className="text-indigo-600">{candidate.votes_count}</strong></span>
+                                {candidate.election?.title && (
+                                    <span className="max-w-56 truncate text-[10px] text-slate-400">{candidate.election.title}</span>
+                                )}
+                                <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => openEditModal(candidate)}
-                                        className="rounded-lg p-1 text-slate-400 hover:bg-white hover:text-indigo-600"
+                                        aria-label={`Edit ${candidate.name}`}
+                                        className="rounded-lg p-2 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600"
                                     >
                                         <Edit2 className="h-4 w-4" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(candidate)}
-                                        className="rounded-lg p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                                        aria-label={`Delete ${candidate.name}`}
+                                        className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </button>
@@ -218,7 +208,7 @@ export default function Candidates({
                 </div>
 
                 {candidates.data.length === 0 && (
-                    <div className="rounded-2xl border border-slate-200 bg-white py-12 text-center text-xs text-slate-400">
+                    <div className="border-b border-slate-200 bg-white py-12 text-center text-xs text-slate-400">
                         No candidates registered yet.
                     </div>
                 )}
@@ -350,4 +340,3 @@ export default function Candidates({
         </AdminLayout>
     );
 }
-

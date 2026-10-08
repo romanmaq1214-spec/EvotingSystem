@@ -108,61 +108,57 @@ export default function Positions({ positions, elections, selected_election_id }
                     </button>
                 </div>
 
-                {/* Positions Grid */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {/* Positions displayed as rows with horizontal dividers. */}
+                <div className="divide-y divide-slate-200 border-y border-slate-200 bg-white">
                     {positions.map((pos) => (
                         <div
                             key={pos.id}
-                            className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+                            className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between"
                         >
-                            <div>
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-center space-x-2">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-                                            <Award className="h-4 w-4" />
-                                        </div>
-                                        <h3 className="font-bold text-slate-900">{pos.name}</h3>
-                                    </div>
-                                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600">
-                                        Max {pos.max_votes} vote
-                                    </span>
+                            <div className="flex min-w-0 flex-1 items-start gap-3">
+                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-500/20">
+                                    <Award className="h-4 w-4" />
                                 </div>
-
-                                <p className="mt-2 text-xs text-slate-500">
-                                    {pos.description || 'No description added for this position.'}
-                                </p>
-
-                                <div className="mt-4 flex items-center space-x-2 text-xs text-slate-500">
-                                    <Users className="h-3.5 w-3.5 text-indigo-500" />
-                                    <span><strong>{pos.candidates_count}</strong> Registered Candidates</span>
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="font-bold text-slate-900">{pos.name}</h3>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        {pos.description || 'No description added for this position.'}
+                                    </p>
+                                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                                        <span className="inline-flex items-center gap-1.5">
+                                            <Users className="h-3.5 w-3.5 text-indigo-500" />
+                                            <strong>{pos.candidates_count}</strong> Registered Candidates
+                                        </span>
+                                        <span>Max {pos.max_votes} {pos.max_votes === 1 ? 'vote' : 'votes'}</span>
+                                        {pos.election?.title && (
+                                            <span className="truncate text-[10px] text-slate-400">{pos.election.title}</span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-3">
-                                <span className="text-[10px] text-slate-400">
-                                    {pos.election?.title}
-                                </span>
-                                <div className="flex items-center space-x-1">
-                                    <button
-                                        onClick={() => openEditModal(pos)}
-                                        className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-indigo-600"
-                                    >
-                                        <Edit2 className="h-4 w-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(pos)}
-                                        className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
-                                </div>
+                            <div className="flex items-center gap-1 sm:ml-4">
+                                <button
+                                    onClick={() => openEditModal(pos)}
+                                    aria-label={`Edit ${pos.name}`}
+                                    className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-indigo-600"
+                                >
+                                    <Edit2 className="h-4 w-4" />
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(pos)}
+                                    aria-label={`Delete ${pos.name}`}
+                                    className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
 
                 {positions.length === 0 && (
-                    <div className="rounded-2xl border border-slate-200 bg-white py-12 text-center text-xs text-slate-400">
+                    <div className="border-b border-slate-200 bg-white py-12 text-center text-xs text-slate-400">
                         No positions found for this election. Click "Add New Position" above.
                     </div>
                 )}
@@ -262,4 +258,3 @@ export default function Positions({ positions, elections, selected_election_id }
         </AdminLayout>
     );
 }
-

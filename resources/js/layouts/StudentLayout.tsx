@@ -18,16 +18,18 @@ export default function StudentLayout({ title, children, showBackToDashboard = f
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white font-sans text-slate-800">
-            <Head title={`${title} | School E-Voting System`} />
+            <Head title="EVotingSystem" />
 
             {/* Navbar */}
             <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
                 <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
                     {/* Brand */}
                     <div className="flex items-center space-x-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20">
-                            <Vote className="h-6 w-6" />
-                        </div>
+                        <img
+                            src="/logo.png"
+                            alt="EVotingSystem Logo"
+                            className="h-10 w-10 object-contain"
+                        />
                         <div>
                             <Link href="/student/dashboard" className="text-lg font-bold tracking-tight text-slate-900 hover:text-blue-600">
                                 EVotingSystem
