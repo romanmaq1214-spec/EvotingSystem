@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { router, useForm } from '@inertiajs/react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { UserCheck, Plus, Edit2, Trash2, X, Award, CheckCircle, Image as ImageIcon } from 'lucide-react';
@@ -60,6 +60,7 @@ export default function Candidates({
 }: Props) {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
     const { data, setData, post, processing, reset, errors } = useForm<{
         election_id: number | string;
@@ -81,8 +82,17 @@ export default function Candidates({
         photo: null,
     });
 
+    useEffect(() => {
+        if (!data.photo) return;
+
+        const previewUrl = URL.createObjectURL(data.photo);
+        setPhotoPreview(previewUrl);
+        return () => URL.revokeObjectURL(previewUrl);
+    }, [data.photo]);
+
     const openCreateModal = () => {
         setEditingCandidate(null);
+        setPhotoPreview(null);
         reset();
         setData({
             election_id: filters.election_id || (elections[0]?.id ?? ''),
@@ -99,6 +109,7 @@ export default function Candidates({
 
     const openEditModal = (c: Candidate) => {
         setEditingCandidate(c);
+        setPhotoPreview(c.photo);
         setData({
             election_id: c.election_id,
             position_id: c.position_id,
@@ -296,13 +307,34 @@ export default function Candidates({
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="font-semibold text-slate-700">Candidate Photo</label>
+                                    <label className="font-semibold text-slate-700">Candidate Image</label>
                                     <input
                                         type="file"
                                         accept="image/*"
                                         onChange={(e) => setData('photo', e.target.files?.[0] || null)}
-                                        className="mt-1 w-full rounded-xl border border-slate-200 p-2"
+                                        className="mt-1 w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-2 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-indigo-700"
                                     />
+                                    <p className="mt-1 text-[11px] text-slate-400">Choose an image (max 2 MB). Image is optional.</p>
+                                    {photoPreview && (
+                                        <div className="mt-3 flex items-center gap-3">
+                                            <img src={photoPreview} alt="Candidate preview" className="h-12 w-12 rounded-full border border-slate-200 object-cover" />
+                                            <span className="text-[11px] text-slate-500">
+                                                {data.photo?.name || 'Current candidate image'}
+                                            </span>
+                                            {data.photo && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setData('photo', null);
+                                                        setPhotoPreview(editingCandidate?.photo || null);
+                                                    }}
+                                                    className="ml-auto text-[11px] font-semibold text-rose-600 hover:text-rose-700"
+                                                >
+                                                    Remove new image
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="font-semibold text-slate-700">Status</label>
