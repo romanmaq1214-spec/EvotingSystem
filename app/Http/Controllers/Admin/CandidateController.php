@@ -59,11 +59,17 @@ class CandidateController extends Controller
             'platform' => ['nullable', 'string'],
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'photo' => ['nullable', 'image', 'max:2048'], // 2MB max
+            'original_photo' => ['nullable', 'image', 'max:10240'],
         ]);
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('candidates', 'public');
             $validated['photo'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('original_photo')) {
+            $path = $request->file('original_photo')->store('candidate-originals', 'public');
+            $validated['original_photo'] = '/storage/' . $path;
         }
 
         Candidate::create($validated);
@@ -82,7 +88,16 @@ class CandidateController extends Controller
             'platform' => ['nullable', 'string'],
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'photo' => ['nullable', 'image', 'max:2048'],
+            'original_photo' => ['nullable', 'image', 'max:10240'],
         ]);
+
+        if ($request->hasFile('original_photo')) {
+            if ($candidate->original_photo && str_starts_with($candidate->original_photo, '/storage/')) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $candidate->original_photo));
+            }
+            $path = $request->file('original_photo')->store('candidate-originals', 'public');
+            $validated['original_photo'] = '/storage/' . $path;
+        }
 
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
@@ -104,6 +119,10 @@ class CandidateController extends Controller
         if ($candidate->photo && str_starts_with($candidate->photo, '/storage/')) {
             $oldPath = str_replace('/storage/', '', $candidate->photo);
             Storage::disk('public')->delete($oldPath);
+        }
+
+        if ($candidate->original_photo && str_starts_with($candidate->original_photo, '/storage/')) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $candidate->original_photo));
         }
 
         $candidate->delete();

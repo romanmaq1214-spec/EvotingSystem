@@ -16,6 +16,7 @@ class Candidate extends Model
         'name',
         'party',
         'photo',
+        'original_photo',
         'platform',
         'status',
     ];

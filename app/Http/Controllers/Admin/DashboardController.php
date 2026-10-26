@@ -27,11 +27,47 @@ class DashboardController extends Controller
 
         $electionStats = null;
         if ($currentElection) {
-            $activeStudentsCount = Student::where('status', 'active')->count();
+            $activeStudents = Student::where('status', 'active')->get(['id', 'course']);
+            $activeStudentsCount = $activeStudents->count();
             $uniqueVotersCount = Vote::where('election_id', $currentElection->id)
                 ->whereHas('student', fn ($query) => $query->where('status', 'active'))
                 ->distinct('voter_id')
                 ->count('voter_id');
+            $votedStudentIds = Vote::where('election_id', $currentElection->id)
+                ->distinct('voter_id')
+                ->pluck('voter_id')
+                ->flip();
+
+            $departmentCounts = [
+                'BSIT' => ['voted' => 0, 'total' => 0],
+                'BSAB' => ['voted' => 0, 'total' => 0],
+                'BEED' => ['voted' => 0, 'total' => 0],
+            ];
+
+            foreach ($activeStudents as $student) {
+                $department = $this->departmentCodeFor($student->course);
+                if (! $department) {
+                    continue;
+                }
+
+                $departmentCounts[$department]['total']++;
+                if ($votedStudentIds->has($student->id)) {
+                    $departmentCounts[$department]['voted']++;
+                }
+            }
+
+            $departmentParticipation = collect($departmentCounts)
+                ->map(fn (array $counts, string $department) => [
+                    'department' => $department,
+                    'voted' => $counts['voted'],
+                    'total' => $counts['total'],
+                    'not_voted' => $counts['total'] - $counts['voted'],
+                    'participation_rate' => $counts['total'] > 0
+                        ? round(($counts['voted'] / $counts['total']) * 100, 1)
+                        : 0,
+                ])
+                ->values()
+                ->all();
 
             $participationRate = $activeStudentsCount > 0
                 ? round(($uniqueVotersCount / $activeStudentsCount) * 100, 1)
@@ -51,6 +87,7 @@ class DashboardController extends Controller
                 'eligible_students' => $activeStudentsCount,
                 'not_voted_students' => max($activeStudentsCount - $uniqueVotersCount, 0),
                 'participation_rate' => $participationRate,
+                'department_participation' => $departmentParticipation,
             ];
         }
 
@@ -82,5 +119,17 @@ class DashboardController extends Controller
             'current_election' => $electionStats,
             'recent_activity' => $recentVotes,
         ]);
+    }
+
+    private function departmentCodeFor(string $course): ?string
+    {
+        $normalizedCourse = strtoupper(preg_replace('/[^a-z0-9]+/i', '', $course) ?? '');
+
+        return match (true) {
+            str_starts_with($normalizedCourse, 'BSIT'), str_contains($normalizedCourse, 'INFORMATIONTECHNOLOGY') => 'BSIT',
+            str_starts_with($normalizedCourse, 'BSAB'), str_contains($normalizedCourse, 'AGRIBUSINESS'), str_contains($normalizedCourse, 'AGRICULTURALBUSINESS') => 'BSAB',
+            str_starts_with($normalizedCourse, 'BEED'), str_contains($normalizedCourse, 'ELEMENTARYEDUCATION') => 'BEED',
+            default => null,
+        };
     }
 }

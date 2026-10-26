@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router, useForm } from '@inertiajs/react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Award, Plus, Edit2, Trash2, X, Users } from 'lucide-react';
+import { Award, Plus, Edit2, Trash2, X, Users, Vote } from 'lucide-react';
 
 interface Position {
     id: number;
@@ -82,14 +82,14 @@ export default function Positions({ positions, elections, selected_election_id }
     return (
         <AdminLayout title="Position Management">
             <div className="space-y-6">
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end">
                     {/* Election Selector */}
-                    <div className="flex items-center space-x-2">
-                        <label className="text-xs font-semibold uppercase text-slate-500">Filter Election:</label>
+                    <div className="w-full sm:max-w-xl">
+                        <label className="mb-1.5 block text-xs font-semibold text-slate-700">Show positions for election</label>
                         <select
                             value={selected_election_id || ''}
                             onChange={(e) => handleElectionChange(Number(e.target.value))}
-                            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm focus:border-indigo-500"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-800 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                         >
                             {elections.map((el) => (
                                 <option key={el.id} value={el.id}>
@@ -101,56 +101,63 @@ export default function Positions({ positions, elections, selected_election_id }
 
                     <button
                         onClick={openCreateModal}
-                        className="inline-flex items-center space-x-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/20 hover:bg-indigo-500"
+                        className="inline-flex shrink-0 items-center justify-center space-x-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
                     >
                         <Plus className="h-4 w-4" />
                         <span>Add New Position</span>
                     </button>
                 </div>
 
-                {/* Positions displayed as rows with horizontal dividers. */}
-                <div className="divide-y divide-slate-200 border-y border-slate-200 bg-white">
+                {/* Keep positions in a readable line layout with clear metadata and actions. */}
+                <div className="space-y-3">
                     {positions.map((pos) => (
                         <div
                             key={pos.id}
-                            className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+                            className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md sm:flex-row sm:items-center sm:justify-between sm:px-5"
                         >
-                            <div className="flex min-w-0 flex-1 items-start gap-3">
-                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-500/20">
-                                    <Award className="h-4 w-4" />
+                            <div className="flex min-w-0 flex-1 items-start gap-4">
+                                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+                                    <Award className="h-5 w-5" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h3 className="font-bold text-slate-900">{pos.name}</h3>
-                                    <p className="mt-1 text-xs text-slate-500">
+                                    <h3 className="text-base font-semibold text-slate-900">{pos.name}</h3>
+                                    <p className="mt-1 text-sm leading-5 text-slate-600">
                                         {pos.description || 'No description added for this position.'}
                                     </p>
-                                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
-                                        <span className="inline-flex items-center gap-1.5">
-                                            <Users className="h-3.5 w-3.5 text-indigo-500" />
-                                            <strong>{pos.candidates_count}</strong> Registered Candidates
+                                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-2.5 py-1.5 text-xs text-slate-600 ring-1 ring-slate-200">
+                                            <Users className="h-3.5 w-3.5 text-indigo-600" />
+                                            <strong className="text-slate-800">{pos.candidates_count}</strong> candidates
                                         </span>
-                                        <span>Max {pos.max_votes} {pos.max_votes === 1 ? 'vote' : 'votes'}</span>
+                                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-2.5 py-1.5 text-xs text-slate-600 ring-1 ring-slate-200">
+                                            <Vote className="h-3.5 w-3.5 text-emerald-600" />
+                                            Up to <strong className="text-slate-800">{pos.max_votes}</strong> {pos.max_votes === 1 ? 'vote' : 'votes'} per student
+                                        </span>
                                         {pos.election?.title && (
-                                            <span className="truncate text-[10px] text-slate-400">{pos.election.title}</span>
+                                            <span className="inline-flex max-w-full items-center rounded-lg bg-indigo-50 px-2.5 py-1.5 text-xs text-indigo-700 sm:max-w-[22rem]">
+                                                <span className="truncate">{pos.election.title}</span>
+                                            </span>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-1 sm:ml-4">
+                            <div className="flex items-center gap-2 border-t border-slate-100 pt-3 sm:ml-4 sm:border-0 sm:pt-0">
                                 <button
                                     onClick={() => openEditModal(pos)}
                                     aria-label={`Edit ${pos.name}`}
-                                    className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-indigo-600"
+                                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
                                 >
-                                    <Edit2 className="h-4 w-4" />
+                                    <Edit2 className="h-3.5 w-3.5" />
+                                    Edit
                                 </button>
                                 <button
                                     onClick={() => handleDelete(pos)}
                                     aria-label={`Delete ${pos.name}`}
-                                    className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
                                 >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -158,8 +165,10 @@ export default function Positions({ positions, elections, selected_election_id }
                 </div>
 
                 {positions.length === 0 && (
-                    <div className="border-b border-slate-200 bg-white py-12 text-center text-xs text-slate-400">
-                        No positions found for this election. Click "Add New Position" above.
+                    <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-12 text-center">
+                        <Award className="mx-auto h-8 w-8 text-slate-300" />
+                        <p className="mt-3 text-sm font-semibold text-slate-700">No positions for this election yet</p>
+                        <p className="mt-1 text-xs text-slate-500">Add a position to start organizing the ballot.</p>
                     </div>
                 )}
             </div>

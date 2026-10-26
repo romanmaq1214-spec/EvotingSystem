@@ -54,7 +54,7 @@ export default function Students({ students, filters }: Props) {
         last_name: '',
         email: '',
         password: '',
-        course: 'BS Information Technology',
+        course: '',
         year_level: '1st Year',
         status: 'active',
     });
@@ -369,14 +369,25 @@ export default function Students({ students, filters }: Props) {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="font-semibold text-slate-700">Course *</label>
-                                    <input
-                                        type="text"
+                                    <label className="font-semibold text-slate-700">Department / Program *</label>
+                                    <select
                                         required
                                         value={data.course}
                                         onChange={(e) => setData('course', e.target.value)}
                                         className="mt-1 w-full rounded-xl border border-slate-200 p-2.5"
-                                    />
+                                    >
+                                        <option value="" disabled>Select a department / program</option>
+                                        <option value="BS Information Technology (BSIT)">BS Information Technology (BSIT)</option>
+                                        <option value="BS Agribusiness (BSAB)">BS Agribusiness (BSAB)</option>
+                                        <option value="Bachelor of Elementary Education (BEED)">Bachelor of Elementary Education (BEED)</option>
+                                        {editingStudent && data.course && ![
+                                            'BS Information Technology (BSIT)',
+                                            'BS Agribusiness (BSAB)',
+                                            'Bachelor of Elementary Education (BEED)',
+                                        ].includes(data.course) && (
+                                            <option value={data.course}>{data.course} (existing record)</option>
+                                        )}
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="font-semibold text-slate-700">Year Level *</label>

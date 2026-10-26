@@ -37,6 +37,13 @@ interface Props {
         eligible_students: number;
         not_voted_students: number;
         participation_rate: number;
+        department_participation: Array<{
+            department: 'BSIT' | 'BSAB' | 'BEED';
+            voted: number;
+            total: number;
+            not_voted: number;
+            participation_rate: number;
+        }>;
     } | null;
     recent_activity: Array<{
         id: number;
@@ -48,6 +55,30 @@ interface Props {
         time_ago: string;
     }>;
 }
+
+const departmentStyles = {
+    BSIT: {
+        border: 'border-violet-200',
+        background: 'bg-violet-50',
+        text: 'text-violet-700',
+        track: 'bg-violet-100',
+        bar: 'bg-violet-600',
+    },
+    BSAB: {
+        border: 'border-emerald-200',
+        background: 'bg-emerald-50',
+        text: 'text-emerald-700',
+        track: 'bg-emerald-100',
+        bar: 'bg-emerald-600',
+    },
+    BEED: {
+        border: 'border-blue-200',
+        background: 'bg-blue-50',
+        text: 'text-blue-700',
+        track: 'bg-blue-100',
+        bar: 'bg-blue-600',
+    },
+} as const;
 
 export default function Dashboard({ stats, current_election, recent_activity }: Props) {
     return (
@@ -167,6 +198,38 @@ export default function Dashboard({ stats, current_election, recent_activity }: 
                                         <span className="font-medium text-slate-500">
                                             {current_election.not_voted_students} {current_election.not_voted_students === 1 ? 'student has' : 'students have'} not voted yet
                                         </span>
+                                    </div>
+
+                                    <div className="mt-6">
+                                        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            Participation by Department
+                                        </h3>
+                                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                            {current_election.department_participation.map((department) => {
+                                                const style = departmentStyles[department.department];
+
+                                                return (
+                                                    <div key={department.department} className={`rounded-xl border ${style.border} ${style.background} p-3.5`}>
+                                                        <div className="flex items-center justify-between gap-2">
+                                                            <span className={`text-sm font-bold ${style.text}`}>{department.department}</span>
+                                                            <span className={`text-xs font-semibold ${style.text}`}>{department.participation_rate}%</span>
+                                                        </div>
+                                                        <p className="mt-2 text-xs font-medium text-slate-700">
+                                                            {department.voted} / {department.total} students voted
+                                                        </p>
+                                                        <div className={`mt-2 h-2 overflow-hidden rounded-full ${style.track}`}>
+                                                            <div
+                                                                className={`h-full rounded-full ${style.bar} transition-all duration-500`}
+                                                                style={{ width: `${Math.min(department.participation_rate, 100)}%` }}
+                                                            />
+                                                        </div>
+                                                        <p className="mt-2 text-[11px] text-slate-500">
+                                                            {department.not_voted} {department.not_voted === 1 ? 'student has' : 'students have'} not voted yet
+                                                        </p>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
 
